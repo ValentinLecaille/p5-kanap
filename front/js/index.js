@@ -15,7 +15,7 @@ fetch("http://localhost:3000/api/products/")
             article.appendChild(img);
 
             const h3 = document.createElement("h3");
-            h3.className = "productName";
+            h3.className = "productName"; // on affecte une classe css (qui doit déjà exister)
             h3.textContent = jsonProduct.name;
             article.appendChild(h3);
 
@@ -27,7 +27,6 @@ fetch("http://localhost:3000/api/products/")
             itemsContainer.appendChild(a);
 
         }
-        
     });
 
 

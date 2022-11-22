@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <title>Nom du produit</title>
+    <title id="pageTitle">Nom du produit</title>
 
     <meta charset="utf-8">
     <meta name="description" content="Plateforme incroyable de e-commerce">
@@ -49,7 +49,7 @@
             <img id="productImg" class="item__img">
               <!-- <img src="../images/logo.png" alt="Photographie d'un canapé"> -->
             </img>
-            <div class="item__content">
+            <div class="item__content" id="idProduct">
 
               <div class="item__content__titlePrice">
                 <h1 id="title"><!-- Nom du produit --></h1>
@@ -78,7 +78,7 @@
               </div>
 
               <div class="item__content__addButton">
-                <button id="addToCart">Ajouter au panier</button>
+                <button id="addToCart" type="button">Ajouter au panier</button>
               </div>
 
             </div>
@@ -111,5 +111,6 @@
       </div>
     </footer>
   <script src="../js/product.js"></script>
+  <script src="../js/cart.js"></script>
   </body>
 </html>
