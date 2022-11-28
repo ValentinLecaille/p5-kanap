@@ -15,3 +15,15 @@ for(let i = 0; i < panier; i++)
 	
 	// maintenant, "product" contient toutes les information de l'article du panier, on peut les afficher dans la page.
 }*/
+
+
+function changeQuantity(productId, quantity) {
+	let cart = getCart();
+    cart = cart.filter((p) => p.idProduct == productId);    
+
+    if (quantity != undefined) {
+        cart.quantity += quantity;
+    }
+    localStorage.setItem("productSelected", JSON.stringify(cart));
+    displayCart();
+  }
