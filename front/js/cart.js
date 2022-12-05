@@ -144,16 +144,108 @@ function removeFromCart(productId) {
     displayCart();
   }
 
-  function changeQuantity(quantity, productId) {
+function changeQuantity(quantity, productId) {
 	let cart = getCart();
     let foundProduct = cart.find((p) => p.idProduct === productId);
 
     if (foundProduct) {
-        foundProduct.quantity = quantity;
-    } else { (foundProduct.quantity <= 0) 
+        if (quantity > 0)
+            foundProduct.quantity = quantity;
+        else 
             removeFromCart(productId);
     }
 
     localStorage.setItem("productSelected", JSON.stringify(cart)),
     displayCart();
+}
+
+
+// *------ ENVOI DU FORMULAIRE ----------- //
+
+// on récupère le formulaire du HTML via l'ID
+const myForm = document.forms['myForm'];
+const errorFirstName = document.getElementById('firstNameErrorMsg');
+const errorLastName = document.getElementById('lastNameErrorMsg');
+const errorAddress = document.getElementById('addressErrorMsg');
+const errorCity = document.getElementById('cityErrorMsg');
+const errorEmail = document.getElementById('emailErrorMsg');
+
+// on déclenche la fonction événement à la soumission du formulaire
+myForm.addEventListener('submit', function(e) {
+
+    errorFirstName.classList.add("hidden");
+    errorLastName.classList.add("hidden");
+    errorAddress.classList.add("hidden");
+    errorCity.classList.add("hidden");
+    errorEmail.classList.add("hidden");
+
+    let regexText = /^[A-Z][a-z]{1,50}$/;
+    let regexAddress = /^[a-z0-9\s,'-]*$/i;
+    let regexEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
+
+    let inputFirstName = myForm.firstName;
+    if (regexText.test(inputFirstName.value.trim()) == false){
+        errorFirstName.classList.remove ("hidden");
+        e.preventDefault();
     }
+
+    let inputLastName = myForm.lastName;
+    if (regexText.test(inputLastName.value.trim()) == false){
+        errorLastName.classList.remove ("hidden");
+        e.preventDefault();
+    }
+
+    let inputAddress = myForm.address;
+    if (regexAddress.test(inputAddress.value.trim()) == false){
+        errorAddress.classList.remove ("hidden");
+        e.preventDefault();
+    }
+
+    let inputCity = myForm.city;
+    if (regexText.test(inputCity.value.trim()) == false){
+        errorCity.classList.remove ("hidden");
+        e.preventDefault();
+    }
+
+    let inputEmail = myForm.email;
+    if (regexEmail.test(inputEmail.value.trim()) == false){
+        errorEmail.classList.remove ("hidden");
+        e.preventDefault();
+    }
+
+    //on créé un tableau pour récupérer les id produits du panier
+    let productToOrder = [];
+    for (let i=0; i < cart.length; i++) {
+        productToOrder.push(cart[i].idProduct);
+    };
+
+    //on créé l'objet qui détiendra les élémnents de contact provenant du formulaire et les id produits du panier
+    let orderObject = {
+        contact: {
+            firstName: inputAddress.value,
+            lastName: inputLastName.value,
+            address: inputAddress.value,
+            city: inputCity.value,
+            email: inputEmail.value,
+        },
+        products: productToOrder
+    };
+
+    //préparation des options du fetch
+    let fetchOptions = {
+        method: 'POST',
+        body: JSON.stringify(orderObject),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+
+    fetch("http://localhost:3000/api/products/order", fetchOptions)
+        .then((response) => {
+            return response.json();
+        })
+        .then((order) => {
+            localStorage.clear();
+            document.location.href = `./confirmation.html?orderId=${order.orderId}`;
+        })
+});

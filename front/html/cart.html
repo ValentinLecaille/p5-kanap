@@ -74,31 +74,31 @@
               <p>Total (<span id="totalQuantity"><!-- 2 --></span> articles) : <span id="totalPrice"><!-- 84,00 --></span> €</p>
             </div>
             <div class="cart__order">
-              <form method="get" class="cart__order__form">
+              <form method="get" class="cart__order__form" name="myForm">
                 <div class="cart__order__form__question">
                   <label for="firstName">Prénom: </label>
-                  <input type="text" name="firstName" id="firstName" required>
-                  <p id="firstNameErrorMsg"><!-- ci est un message d'erreur --></p>
+                  <input type="text" name="firstName" required maxlength="20">
+                  <p id="firstNameErrorMsg" class="hidden">Le prénom doit commencer par une majuscule suivie de lettres minuscules.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="lastName">Nom: </label>
-                  <input type="text" name="lastName" id="lastName" required>
-                  <p id="lastNameErrorMsg"></p>
+                  <input type="text" name="lastName" required maxlength="20">
+                  <p id="lastNameErrorMsg" class="hidden">Le nom de famille doit commencer par une majuscule suivie de lettres minuscules.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="address">Adresse: </label>
-                  <input type="text" name="address" id="address" required>
-                  <p id="addressErrorMsg"></p>
+                  <input type="text" name="address" required>
+                  <p id="addressErrorMsg" class="hidden">L'adresse n'est pas valide</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="city">Ville: </label>
-                  <input type="text" name="city" id="city" required>
-                  <p id="cityErrorMsg"></p>
+                  <input type="text" name="city" required maxlength="20">
+                  <p id="cityErrorMsg" class="hidden">Le nom de la ville doit commencer par une majuscule suivie de lettres minuscules.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="email">Email: </label>
-                  <input type="email" name="email" id="email" required>
-                  <p id="emailErrorMsg"></p>
+                  <input type="email" name="email" required>
+                  <p id="emailErrorMsg" class="hidden">L'adresse email n'est pas valide</p>
                 </div>
                 <div class="cart__order__form__submit">
                   <input type="submit" value="Commander !" id="order">
