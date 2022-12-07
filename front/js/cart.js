@@ -11,24 +11,24 @@ function getCart() {
     }
 }
 
-//colors: "Blue"
-//idProduct:"107fb5b75607497b96722bda5b504926"
-//quantity:"1"
 let products = [];
 
 function init() { 
+
     // récupération de l'ensemble du catalogue de produits à partir de l'API
     products = fetch(`http://localhost:3000/api/products/`)
     // transformation du retour de l'API en tableau
     .then(data => data.json())
     // récupération du tableau de l'API (productsList)
     .then(productsList => {
-        products = productsList //variable globale products : permet d'avoir les détails des produits de l'API
-        displayCart(); // on appelle display Cart pour l'affichage
+        // variable globale products : permet d'avoir les détails des produits de l'API
+        products = productsList;
+        // on appelle display Cart pour l'affichage
+        displayCart(); 
     });
 }
 
-//Affichage des informations produits du LS 
+// Affichage des informations produit du LS 
 function displayCart() { 
     cart = JSON.parse(localStorage.getItem("productSelected"));
 
@@ -119,33 +119,38 @@ function displayCart() {
 
 //  ----    AFFICHAGE DES INFOS TOTAL PANIER      
 
-            let cart = getCart(); //on prend le panier complet
+            // on prend le panier complet
+            let cart = getCart();
 
-            //calcul du nombre total d'articles dans le panier
+            // calcul du nombre total d'articles dans le panier
             totalProducts += parseInt(cartProduct.quantity) * productEx.price;
             totalQuantity += parseInt(cartProduct.quantity);
 
         })
-        //je place le nombre total d'article dans l'emplacement prévu
+        // je place le nombre total d'article dans l'emplacement prévu
         const showTotalQuantity = document.querySelector("#totalQuantity");
         showTotalQuantity.textContent = totalQuantity;
 
+        // je place le montant total du panier dans l'emplacement prévu
         const showTotalPrice = document.querySelector("#totalPrice");
         showTotalPrice.textContent = totalProducts;
 }
+// on appelle la fonction init
 init()
 
+// fonction pour suprrimer un élément du panier (LS)
 function removeFromCart(productId) {
 	let cart = getCart();
+    // on filtre dans le panier (cart) par l'ID
 	cart = cart.filter((p) => p.idProduct != productId);
     localStorage.setItem("productSelected", JSON.stringify(cart));
-
-    //document.getElementById("product_" + productId).remove(); //on supprime du html
     displayCart();
   }
 
+// fonction pour changer la quantité d'un élément du panier (LS)
 function changeQuantity(quantity, productId) {
 	let cart = getCart();
+    // on cherche dans le panier (cart) par l'ID
     let foundProduct = cart.find((p) => p.idProduct === productId);
 
     if (foundProduct) {
@@ -154,7 +159,6 @@ function changeQuantity(quantity, productId) {
         else 
             removeFromCart(productId);
     }
-
     localStorage.setItem("productSelected", JSON.stringify(cart)),
     displayCart();
 }
@@ -213,13 +217,13 @@ myForm.addEventListener('submit', function(e) {
         e.preventDefault();
     }
 
-    //on créé un tableau pour récupérer les id produits du panier
+    // on créé un tableau pour récupérer les id produits du panier
     let productToOrder = [];
     for (let i=0; i < cart.length; i++) {
         productToOrder.push(cart[i].idProduct);
     };
 
-    //on créé l'objet qui détiendra les élémnents de contact provenant du formulaire et les id produits du panier
+    // on créé l'objet qui détiendra les éléments de contact provenant du formulaire et les id produits du panier
     let orderObject = {
         contact: {
             firstName: inputAddress.value,
@@ -231,7 +235,7 @@ myForm.addEventListener('submit', function(e) {
         products: productToOrder
     };
 
-    //préparation des options du fetch
+    // préparation des options du fetch
     let fetchOptions = {
         method: 'POST',
         body: JSON.stringify(orderObject),
@@ -240,12 +244,21 @@ myForm.addEventListener('submit', function(e) {
         }
     };
 
-    fetch("http://localhost:3000/api/products/order", fetchOptions)
-        .then((response) => {
-            return response.json();
-        })
-        .then((order) => {
-            localStorage.clear();
-            document.location.href = `./confirmation.html?orderId=${order.orderId}`;
-        })
+    if (orderObject.products == 0) {
+        alert("Votre panier est vide")
+    } else {
+
+        fetch("http://localhost:3000/api/products/order", fetchOptions)
+            .then((response) => {
+                return response.json();
+            })
+            .then((order) => {
+                localStorage.clear();
+                document.location.href = `./confirmation.html?orderId=${order.orderId}`;
+            })
+            .catch((err) => {
+                alert(err.message)
+                console.log(err)
+            })
+    }
 });

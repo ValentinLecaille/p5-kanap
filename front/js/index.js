@@ -1,6 +1,13 @@
+// on déclare la constante servant de container html pour intégrer les différentes produits de l'API
 const itemsContainer = document.querySelector(".items");
+
+// on appelle le fetch pour récupérer les données de l'api
 fetch("http://localhost:3000/api/products/")
+
+    // on transforme les données de l'api au format json
     .then(data => data.json())
+
+    // pour chaque donnée de l'api, on place cette donnée dans la balise html que l'on créé
     .then(jsonListProduct => {
         for(let jsonProduct of jsonListProduct){
             const a = document.createElement("a");
@@ -15,7 +22,8 @@ fetch("http://localhost:3000/api/products/")
             article.appendChild(img);
 
             const h3 = document.createElement("h3");
-            h3.className = "productName"; // on affecte une classe css (qui doit déjà exister)
+            // on affecte une classe css (qui doit déjà exister)
+            h3.className = "productName";
             h3.textContent = jsonProduct.name;
             article.appendChild(h3);
 
