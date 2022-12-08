@@ -31,6 +31,14 @@ function init() {
 // Affichage des informations produit du LS 
 function displayCart() { 
     cart = JSON.parse(localStorage.getItem("productSelected"));
+    if (cart == null) {
+        cart = [];
+    }
+    if (cart.length == 0) {
+        document.getElementById("cartDiv").classList.add("hidden");
+    } else {
+        document.getElementById("cartDiv").classList.remove("hidden");
+    }
 
         const sectionCartItems = document.getElementById("cart__items");
         sectionCartItems.innerHTML = "";
@@ -182,6 +190,7 @@ myForm.addEventListener('submit', function(e) {
     errorAddress.classList.add("hidden");
     errorCity.classList.add("hidden");
     errorEmail.classList.add("hidden");
+    let isError = false;
 
     let regexText = /^[A-Z][a-z]{1,50}$/;
     let regexAddress = /^[a-z0-9\s,'-]*$/i;
@@ -191,30 +200,39 @@ myForm.addEventListener('submit', function(e) {
     if (regexText.test(inputFirstName.value.trim()) == false){
         errorFirstName.classList.remove ("hidden");
         e.preventDefault();
+        isError = true;
     }
 
     let inputLastName = myForm.lastName;
     if (regexText.test(inputLastName.value.trim()) == false){
         errorLastName.classList.remove ("hidden");
         e.preventDefault();
+        isError = true;
     }
 
     let inputAddress = myForm.address;
     if (regexAddress.test(inputAddress.value.trim()) == false){
         errorAddress.classList.remove ("hidden");
         e.preventDefault();
+        isError = true;
     }
 
     let inputCity = myForm.city;
     if (regexText.test(inputCity.value.trim()) == false){
         errorCity.classList.remove ("hidden");
         e.preventDefault();
+        isError = true;
     }
 
     let inputEmail = myForm.email;
     if (regexEmail.test(inputEmail.value.trim()) == false){
         errorEmail.classList.remove ("hidden");
         e.preventDefault();
+        isError = true;
+    }
+
+    if (isError) {
+        return;
     }
 
     // on créé un tableau pour récupérer les id produits du panier
