@@ -218,7 +218,7 @@ myForm.addEventListener('submit', function(e) {
     }
 
     let inputCity = myForm.city;
-    if (regexText.test(inputCity.value.trim()) == false){
+    if (regexAddress.test(inputCity.value.trim()) == false){
         errorCity.classList.remove ("hidden");
         e.preventDefault();
         isError = true;
