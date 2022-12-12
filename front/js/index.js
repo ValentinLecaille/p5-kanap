@@ -1,4 +1,4 @@
-// on déclare la constante servant de container html pour intégrer les différentes produits de l'API
+// on déclare la constante servant de container html pour intégrer les différents produits de l'API
 const itemsContainer = document.querySelector(".items");
 
 // on appelle le fetch pour récupérer les données de l'api

@@ -1,4 +1,3 @@
-
 // transfert de l'id produit par le biais de l'url
 const queryString_url_id = window.location.search;
 const urlSearchParams = new URLSearchParams(queryString_url_id);
