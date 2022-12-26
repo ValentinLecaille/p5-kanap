@@ -77,27 +77,27 @@
               <form method="get" class="cart__order__form" name="myForm">
                 <div class="cart__order__form__question">
                   <label for="firstName">Prénom: </label>
-                  <input type="text" name="firstName" required maxlength="20" id="firstName">
-                  <p id="firstNameErrorMsg" class="hidden">Le prénom doit commencer par une majuscule suivie de lettres minuscules.</p>
+                  <input type="text" name="firstName" required maxlength="20" id="firstName" onchange="validFirstName()">
+                  <p id="firstNameErrorMsg" class="hidden">Le prénom doit commencer par une majuscule suivie de lettres minuscules, sans accents.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="lastName">Nom: </label>
-                  <input type="text" name="lastName" required maxlength="20" id="lastName">
-                  <p id="lastNameErrorMsg" class="hidden">Le nom de famille doit commencer par une majuscule suivie de lettres minuscules.</p>
+                  <input type="text" name="lastName" required maxlength="20" id="lastName" onchange="validLastName()">
+                  <p id="lastNameErrorMsg" class="hidden">Le nom de famille doit commencer par une majuscule suivie de lettres minuscules sans accent.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="address">Adresse: </label>
-                  <input type="text" name="address" required id="address">
-                  <p id="addressErrorMsg" class="hidden">L'adresse n'est pas valide</p>
+                  <input type="text" name="address" required id="address" onchange="validAddress()">
+                  <p id="addressErrorMsg" class="hidden">L'adresse n'est pas valide. Aucun accent.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="city">Ville: </label>
-                  <input type="text" name="city" required maxlength="20" id="city">
-                  <p id="cityErrorMsg" class="hidden">Le nom de la ville doit commencer par une majuscule suivie de lettres minuscules.</p>
+                  <input type="text" name="city" required maxlength="20" id="city" onchange="validCity()">
+                  <p id="cityErrorMsg" class="hidden">Le nom de la ville doit commencer par une majuscule suivie de lettres minuscules sans accent, et le code postal.</p>
                 </div>
                 <div class="cart__order__form__question">
                   <label for="email">Email: </label>
-                  <input type="email" name="email" required id="email">
+                  <input type="email" name="email" required id="email" onchange="validEmail()">
                   <p id="emailErrorMsg" class="hidden">L'adresse email n'est pas valide</p>
                 </div>
                 <div class="cart__order__form__submit">

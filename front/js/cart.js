@@ -110,7 +110,7 @@ function displayCart() {
             inputSettingsQuantity.setAttribute("value", cartProduct.quantity)
             divContentSettingsQuantity.appendChild(inputSettingsQuantity);
             inputSettingsQuantity.onclick = function(ev){
-                changeQuantity(ev.target.value, cartProduct.idProduct);
+                changeQuantity(ev.target.value, cartProduct.idProduct, cartProduct.colors);
             }
 
             const divContentSettingsDelete = document.createElement("div");
@@ -122,7 +122,7 @@ function displayCart() {
             pSettingsDelete.textContent = 'Supprimer';
             divContentSettingsDelete.appendChild(pSettingsDelete);
             pSettingsDelete.onclick = function(){ 
-                removeFromCart(cartProduct.idProduct);
+                removeFromCart(cartProduct.idProduct, cartProduct.colors);
             }
 
 //  ----    AFFICHAGE DES INFOS TOTAL PANIER      
@@ -147,19 +147,20 @@ function displayCart() {
 init()
 
 // fonction pour suprrimer un élément du panier (LS)
-function removeFromCart(productId) {
+function removeFromCart(productId, color) {
 	let cart = getCart();
     // on filtre dans le panier (cart) par l'ID
-	cart = cart.filter((p) => p.idProduct != productId);
+	cart = cart.filter((p) => ((p.idProduct != productId) || (p.colors != color)));
     localStorage.setItem("productSelected", JSON.stringify(cart));
     displayCart();
   }
 
 // fonction pour changer la quantité d'un élément du panier (LS)
-function changeQuantity(quantity, productId) {
+
+function changeQuantity(quantity, productId, color) {
 	let cart = getCart();
     // on cherche dans le panier (cart) par l'ID
-    let foundProduct = cart.find((p) => p.idProduct === productId);
+    let foundProduct = cart.find((p) => (p.idProduct == productId) && (p.colors == color));
 
     if (foundProduct) {
         if (quantity > 0)
@@ -167,10 +168,9 @@ function changeQuantity(quantity, productId) {
         else 
             removeFromCart(productId);
     }
-    localStorage.setItem("productSelected", JSON.stringify(cart)),
+    localStorage.setItem("productSelected", JSON.stringify(cart));
     displayCart();
 }
-
 
 // *------ ENVOI DU FORMULAIRE ----------- //
 
@@ -182,57 +182,90 @@ const errorAddress = document.getElementById('addressErrorMsg');
 const errorCity = document.getElementById('cityErrorMsg');
 const errorEmail = document.getElementById('emailErrorMsg');
 
-// on déclenche la fonction événement à la soumission du formulaire
-myForm.addEventListener('submit', function(e) {
+let inputFirstName = myForm.firstName;
+let inputLastName = myForm.lastName;
+let inputAddress = myForm.address;
+let inputCity = myForm.city;
+let inputEmail = myForm.email;
 
+// const regexText = new RegExp ("^[a-zéèçàA-Z0-9.-_ ]{2,50}$");
+const regexName = /^[A-Z][a-z]{1,15}(\-[A-Z][a-z]{1,15})?$/;
+const regexAddress = /^[A-Za-z0-9\-\s']{1,100}$/;
+const regexEmail = new RegExp ("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
+
+function validFirstName(){
     errorFirstName.classList.add("hidden");
-    errorLastName.classList.add("hidden");
-    errorAddress.classList.add("hidden");
-    errorCity.classList.add("hidden");
-    errorEmail.classList.add("hidden");
-    let isError = false;
 
-    let regexText = /^[A-Z][a-z]{1,50}$/;
-    let regexAddress = /^[a-z0-9\s,'-]*$/i;
-    let regexEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
-
-    let inputFirstName = myForm.firstName;
-    if (regexText.test(inputFirstName.value.trim()) == false){
+    if (regexName.test(inputFirstName.value.trim()) == false){
         errorFirstName.classList.remove ("hidden");
-        e.preventDefault();
-        isError = true;
+        return false;
     }
+    return true;
+}
 
-    let inputLastName = myForm.lastName;
-    if (regexText.test(inputLastName.value.trim()) == false){
+function validLastName(){
+    errorLastName.classList.add("hidden");
+
+    if (regexName.test(inputLastName.value.trim()) == false){
         errorLastName.classList.remove ("hidden");
-        e.preventDefault();
-        isError = true;
+        return false;
     }
+    return true;
+}
 
-    let inputAddress = myForm.address;
+function validAddress(){
+    errorAddress.classList.add("hidden");
+
     if (regexAddress.test(inputAddress.value.trim()) == false){
         errorAddress.classList.remove ("hidden");
-        e.preventDefault();
-        isError = true;
+        return false;
     }
+    return true;    
+}
 
-    let inputCity = myForm.city;
+function validCity(){
+    errorCity.classList.add("hidden");
+
     if (regexAddress.test(inputCity.value.trim()) == false){
         errorCity.classList.remove ("hidden");
-        e.preventDefault();
-        isError = true;
+        return false;
     }
+    return true;      
+}
 
-    let inputEmail = myForm.email;
+function validEmail(){
+    errorEmail.classList.add("hidden");
+
     if (regexEmail.test(inputEmail.value.trim()) == false){
         errorEmail.classList.remove ("hidden");
-        e.preventDefault();
+        return false;
+    }
+    return true;  
+}
+
+// on déclenche la fonction événement à la soumission du formulaire
+myForm.addEventListener('submit', function(e) {
+    let isError = false;
+    
+    if(!validFirstName()){
         isError = true;
     }
 
+    if(!validLastName()){
+        isError = true;
+    }
+
+    if(!validAddress()){
+        isError = true;
+    }
+
+    if(!validCity()){
+        isError = true;
+    }
+    
     if (isError) {
-        return;
+        e.preventDefault();
+        return (false);
     }
 
     // on créé un tableau pour récupérer les id produits du panier
@@ -244,7 +277,7 @@ myForm.addEventListener('submit', function(e) {
     // on créé l'objet qui détiendra les éléments de contact provenant du formulaire et les id produits du panier
     let orderObject = {
         contact: {
-            firstName: inputAddress.value,
+            firstName: inputFirstName.value,
             lastName: inputLastName.value,
             address: inputAddress.value,
             city: inputCity.value,
