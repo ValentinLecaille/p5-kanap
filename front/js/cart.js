@@ -245,21 +245,26 @@ function validEmail(){
 
 // on déclenche la fonction événement à la soumission du formulaire
 myForm.addEventListener('submit', function(e) {
+    e.preventDefault();
     let isError = false;
     
     if(!validFirstName()){
+        e.preventDefault();
         isError = true;
     }
 
     if(!validLastName()){
+        e.preventDefault();
         isError = true;
     }
 
     if(!validAddress()){
+        e.preventDefault();
         isError = true;
     }
 
     if(!validCity()){
+        e.preventDefault();
         isError = true;
     }
     
@@ -295,7 +300,7 @@ myForm.addEventListener('submit', function(e) {
         }
     };
 
-    if (orderObject.products == 0) {
+    if (orderObject.products.length == 0) {
         alert("Votre panier est vide")
     } else {
 
